@@ -1,0 +1,26 @@
+text,label
+"I cannot reset my password, the link is expired",account
+"Unable to login to my user account",account
+"How do I update my profile email address?",account
+"Can I transfer ownership of my account?",account
+"I got locked out after three failed attempts",account
+"My credit card was charged twice for the monthly subscription",billing
+"I need a refund for my last invoice",billing
+"Where can I download my tax invoice for last month?",billing
+"Why was my payment declined?",billing
+"Update billing address for receipt",billing
+"The application crashes every time I click save",bug
+"API endpoint returning 500 internal server error",bug
+"Buttons are misaligned on mobile screen",bug
+"Export to PDF throws a null pointer exception",bug
+"Search bar does not return any results even with valid query",bug
+"Please add dark mode support to the dashboard",feature_request
+"It would be great to have export to Excel feature",feature_request
+"Can you support multi-factor authentication via webauthn?",feature_request
+"Requesting webhook integration for Slack notifications",feature_request
+"We need bulk import functionality for CSV files",feature_request
+"Hello, hope you have a nice day",other
+"What are your office hours?",other
+"Just testing the contact form",other
+"Random question about general company info",other
+"Thanks for the help yesterday!",other
