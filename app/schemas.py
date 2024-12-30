@@ -35,6 +35,8 @@ class MessageItem(BaseModel):
 
 class DataListResponse(BaseModel):
     total: int
+    limit: int
+    offset: int
     messages: List[MessageItem]
 
 # --- Retraining Schemas ---

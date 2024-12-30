@@ -38,11 +38,13 @@ def test_data_collection_and_listing():
     assert post_data["status"] == "saved"
     assert "row_id" in post_data
 
-    # Retrieve data
-    get_res = client.get("/data")
+    # Retrieve data with pagination
+    get_res = client.get("/data?limit=10&offset=0")
     assert get_res.status_code == 200
     get_data = get_res.json()
     assert get_data["total"] > 0
+    assert get_data["limit"] == 10
+    assert get_data["offset"] == 0
     assert any(msg["text"] == "My invoice has an error" for msg in get_data["messages"])
 
 def test_retrain_and_job_status():

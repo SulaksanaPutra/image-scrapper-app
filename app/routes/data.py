@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.schemas import DataInputRequest, DataInputResponse, DataListResponse, MessageItem
 from app.services.storage import get_db, save_message, get_all_messages
@@ -22,9 +22,11 @@ def collect_labeled_data(
 
 @router.get("/data", response_model=DataListResponse)
 def list_labeled_data(
+    limit: int = Query(50, ge=1, le=1000, description="Max number of items to return"),
+    offset: int = Query(0, ge=0, description="Number of items to skip"),
     db: Session = Depends(get_db)
 ):
-    """Lists stored labeled messages."""
-    messages = get_all_messages(db)
+    """Lists stored labeled messages with pagination."""
+    messages, total = get_all_messages(db, limit=limit, offset=offset)
     items = [MessageItem.model_validate(m) for m in messages]
-    return DataListResponse(total=len(items), messages=items)
+    return DataListResponse(total=total, limit=limit, offset=offset, messages=items)

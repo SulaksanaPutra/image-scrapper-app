@@ -41,7 +41,12 @@ class BackgroundJobRunner:
                 "--output-dir", version_output_dir,
                 "--engine", engine,
                 "--base-model", base_model,
-                "--model-version", model_version
+                "--model-version", model_version,
+                "--batch-size", str(settings.TRAIN_BATCH_SIZE),
+                "--epochs", str(settings.TRAIN_EPOCHS),
+                "--learning-rate", str(settings.LEARNING_RATE),
+                "--max-length", str(settings.MAX_SEQ_LENGTH),
+                "--test-split", str(settings.TEST_SPLIT_RATIO)
             ]
 
             process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -56,10 +61,20 @@ class BackgroundJobRunner:
             update_training_job(db, job_id=job_id, progress=80, current_step="evaluating_metrics")
             
             metrics = model_registry.load_metrics(model_version) or {"f1_macro": 0.85, "accuracy": 0.88}
-            f1_score = metrics.get("f1_macro", 0.0)
+            candidate_f1 = metrics.get("f1_macro", 0.0)
 
-            # Step 4: Promote model to active if metric threshold is met
-            if f1_score >= settings.AUTO_PROMOTE_F1_THRESHOLD:
+            # Check active model metric for relative comparison
+            active_version_dir = model_registry.get_active_version_dir()
+            active_f1 = 0.0
+            if active_version_dir:
+                active_ver_name = os.path.basename(active_version_dir.rstrip("/\\"))
+                active_metrics = model_registry.load_metrics(active_ver_name)
+                if active_metrics:
+                    active_f1 = active_metrics.get("f1_macro", 0.0)
+
+            # Step 4: Promote candidate model if threshold met AND equal to or better than active model
+            should_promote = candidate_f1 >= settings.AUTO_PROMOTE_F1_THRESHOLD and candidate_f1 >= active_f1
+            if should_promote:
                 model_registry.set_active_version(model_version)
                 inference_engine.load_active_model(force_reload=True)
 

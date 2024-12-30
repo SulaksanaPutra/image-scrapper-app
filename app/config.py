@@ -17,6 +17,17 @@ class Settings(BaseSettings):
 
     AUTO_PROMOTE_F1_THRESHOLD: float = 0.75
 
+    # Training Hyperparameters
+    TRAIN_BATCH_SIZE: int = 8
+    TRAIN_EPOCHS: int = 3
+    LEARNING_RATE: float = 2e-5
+    MAX_SEQ_LENGTH: int = 128
+    TEST_SPLIT_RATIO: float = 0.2
+    DEVICE: str = "auto"  # 'auto', 'cpu', 'cuda', 'mps'
+
+    # Security & CORS
+    ALLOWED_ORIGINS: str = "*"
+
     GEMINI_API_KEY: str = ""
 
     model_config = SettingsConfigDict(

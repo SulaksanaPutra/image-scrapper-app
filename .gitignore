@@ -43,3 +43,6 @@ Thumbs.db
 # Models / Cache (except active model configuration or structure if needed)
 # models/*
 # !models/v1.0.0/
+
+repomix-output.xml
+

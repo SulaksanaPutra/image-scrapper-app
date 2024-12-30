@@ -79,8 +79,10 @@ def save_message(db: Session, text: str, label: str, source: str = "human_correc
     db.refresh(msg)
     return msg
 
-def get_all_messages(db: Session) -> List[MessageModel]:
-    return db.query(MessageModel).all()
+def get_all_messages(db: Session, limit: int = 50, offset: int = 0) -> Tuple[List[MessageModel], int]:
+    total = db.query(MessageModel).count()
+    messages = db.query(MessageModel).offset(offset).limit(limit).all()
+    return messages, total
 
 def import_csv_to_db(db: Session, csv_path: str) -> int:
     added = 0

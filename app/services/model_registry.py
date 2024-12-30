@@ -67,7 +67,7 @@ class ModelRegistry:
 
         try:
             os.symlink(version_dir, self.active_symlink, target_is_directory=True)
-        except (OSError, NotImplementedError, Attribute: AttributeError):
+        except (OSError, NotImplementedError, AttributeError):
             # Fallback for Windows without admin symlink privileges: write pointer file
             with open(self.active_symlink, "w", encoding="utf-8") as f:
                 f.write(version_dir)
